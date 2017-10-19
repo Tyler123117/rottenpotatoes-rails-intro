@@ -11,17 +11,24 @@ class MoviesController < ApplicationController
   end
 
   def index
-    if(params[:sort_by] == "title")
+    sort_method = params[:sort_by] if params.include? :sort_by
+    sort_ratings = params["ratings"].keys if params.include? "ratings"
+    @all_ratings = ["G","PG","PG-13","R","NC-17"]
+    
+    if(sort_method == "title")
       @movies = Movie.order(:title)
       @title_header = 'hilite'
-    elsif(params[:sort_by] == "release_date")
+    elsif(sort_method == "release_date")
       @movies = Movie.order(:release_date)
       @release_date_header = 'hilite'
     else
-      @movies = Movie.all
+      @movies = Movie.where(rating: sort_ratings)
     end
+    
+    
+    
   end
-
+  
   def new
     # default: render 'new' template
   end
