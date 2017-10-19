@@ -22,11 +22,13 @@ class MoviesController < ApplicationController
       @movies = Movie.order(:release_date)
       @release_date_header = 'hilite'
     else
-      @movies = Movie.where(rating: sort_ratings)
+      @movies = Movie.all
     end
     
-    
-    
+    if sort_ratings != nil
+      @movies = Movie.where(rating: sort_ratings)
+    end
+    session[:sort_by] = sort_method
   end
   
   def new
