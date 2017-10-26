@@ -11,10 +11,12 @@ class MoviesController < ApplicationController
   end
 
   def index
+    #needed variable declaration
     sort_method = params[:sort_by] if params.include? :sort_by
     sort_ratings = params["ratings"].keys if params.include? "ratings"
     @all_ratings = ["G","PG","PG-13","R","NC-17"]
     
+    #sorting all movies
     if(sort_method == "title")
       @movies = Movie.order(:title)
       @title_header = 'hilite'
@@ -25,9 +27,11 @@ class MoviesController < ApplicationController
       @movies = Movie.all
     end
     
+    #restricting by rating
     if sort_ratings != nil
       @movies = Movie.where(rating: sort_ratings)
     end
+    
     session[:sort_by] = sort_method
   end
   
