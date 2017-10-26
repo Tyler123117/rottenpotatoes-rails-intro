@@ -12,27 +12,18 @@ class MoviesController < ApplicationController
 
   def index
     #needed variable declaration
-    sort_method = params[:sort_by] if params.include? :sort_by
-    sort_ratings = params["ratings"].keys if params.include? "ratings"
+    session[:sort_by] = params[:sort_by] if params.include? :sort_by
+    session[:ratings] = params["ratings"].keys if params.include? "ratings"
     @all_ratings = ["G","PG","PG-13","R","NC-17"]
     
-    #sorting all movies
-    if(sort_method == "title")
-      @movies = Movie.order(:title)
+    @movies = Movie.where(rating: session[:ratings]).order(session[:sort_by])
+    if(session[:sort_by] == "title")
       @title_header = 'hilite'
-    elsif(sort_method == "release_date")
-      @movies = Movie.order(:release_date)
+    elsif(session[:sort_by] == "release_date")
       @release_date_header = 'hilite'
-    else
-      @movies = Movie.all
     end
-    
-    #restricting by rating
-    if sort_ratings != nil
-      @movies = Movie.where(rating: sort_ratings)
-    end
-    
-    session[:sort_by] = sort_method
+    #sorting all movies
+      
   end
   
   def new
